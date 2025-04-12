@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorry Pankti 💛</title>
+  <style>
+    body {
+      margin: 0;
+      background: #ffe4e6;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      color: pink;
+      animation: float 5s infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(1); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+      padding: 30px;
+      max-width: 600px;
+      text-align: center;
+      display: none;
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card.active {
+      display: block;
+    }
+
+    .cover {
+      padding: 20px;
+      background: linear-gradient(270deg, #fcd34d, #f472b6, #a78bfa);
+      background-size: 600% 600%;
+      color: #fff;
+      border-radius: 15px;
+      animation: bgMove 6s infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .reveal {
+      display: none;
+      margin-top: 20px;
+      font-size: 18px;
+      animation: slideUp 1s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #f472b6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f472b6;
+    }
+
+    .thank-you, .special-text {
+      font-size: 28px;
+      color: #16a34a;
+      margin-top: 20px;
+      display: none;
+      animation: slideUp 1s ease forwards;
+    }
+
+    .emoji-celebration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 2rem;
+      animation: floatUp 2s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-200px); opacity: 0; }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/31/audio_8434b78b3a.mp3?filename=sorry-145005.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card active" id="card1">
+    <div class="cover">
+      🥺 Tap to open the first part...
+      <button class="btn" onclick="revealText(1, '💘 Thank you dear for reading 💘', ['💘','💗','💝'])">Open</button>
+    </div>
+    <div class="reveal" id="text1">
+      Dear Pankti, I'm really sorry for what I did. I know I hurt you deeply, and it breaks my heart knowing that. 💔 You mean more to me than words can say.
+      <br><button class="btn" onclick="nextCard(1, ['😘','😘','😘','😘'])">Next ➡️</button>
+    </div>
+  </div>
+
+  <div class="card" id="card2">
+    <div class="cover">
+      💌 Want to see the next part?
+      <button class="btn" onclick="revealText(2, '', ['🤗','🤗','🤗'])">Open</button>
+    </div>
+    <div class="reveal" id="text2">
+      You've always been my light, my best friend, the one who gets me. 🌟 I miss that so much. I'm not perfect, but I promise I’m learning and growing — for us.
+      <br><button class="btn" onclick="nextCard(2, ['🙈','💞','🙈','💞'])">Next ➡️</button>
+    </div>
+  </div>
+
+  <div class="card" id="card3">
+    <div class="cover">
+      🌈 Final words, ready?
+      <button class="btn" onclick="revealText(3, 'Love you so much 💖', ['Love you','Love you','💞','💖'])">Open</button>
+    </div>
+    <div class="reveal" id="text3">
+      If you can forgive me, even a little... I will treasure it forever. I’m still here, heart open, waiting to start over — if you’ll let me. 💖
+      <br><button class="btn" onclick="launchForgive()">Forgive Me? 💛</button>
+    </div>
+  </div>
+
+  <div class="special-text" id="specialText"></div>
+  <div class="thank-you" id="thankYou">You forgave me 😭💖 Thank you so much!</div>
+  <div class="emoji-celebration" id="emojiContainer"></div>
+
+  <script>
+    // Floating background hearts
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 5 + Math.random() * 5 + 's';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.innerText = '💖';
+      document.body.appendChild(heart);
+    }
+
+    function revealText(num, message, emojis) {
+      document.getElementById("text" + num).style.display = "block";
+      if (message) {
+        const special = document.getElementById("specialText");
+        special.innerText = message;
+        special.style.display = 'block';
+        setTimeout(() => { special.style.display = 'none'; }, 3000);
+      }
+      if (emojis) launchEmojis(emojis);
+    }
+
+    function nextCard(current, emojis) {
+      document.getElementById("card" + current).classList.remove("active");
+      document.getElementById("card" + (current + 1)).classList.add("active");
+      if (emojis) launchEmojis(emojis);
+    }
+
+    function launchForgive() {
+      document.getElementById("thankYou").style.display = "block";
+      launchEmojis(["💖", "💛", "🎉", "🥰", "🌟", "💗", "😊"]);
+    }
+
+    function launchEmojis(emojis) {
+      const emojiContainer = document.getElementById("emojiContainer");
+      for (let i = 0; i < 50; i++) {
+        const emoji = document.createElement("div");
+        emoji.className = "emoji";
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.top = Math.random() * 100 + "vh";
+        emoji.style.animationDuration = 1 + Math.random() * 1.5 + "s";
+        emojiContainer.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 2000);
+      }
+    }
+  </script>
+</body>
+</html>
